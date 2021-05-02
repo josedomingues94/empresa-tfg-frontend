@@ -1,0 +1,52 @@
+<div class="card bg-dark text-white">
+  <div class="card-header">{{titulo}}</div>
+  <div class="card-body">
+
+    <form (ngSubmit)="create()">
+      <div class="form-group row">
+        <label for="dni" class="col-form-label col-sm-2">DNI</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" [(ngModel)]="empleado.dni" name="dni">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="nombre" class="col-form-label col-sm-2">Nombre</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" [(ngModel)]="empleado.nombre" name="nombre">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="apellido1" class="col-form-label col-sm-2">Apellido1</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" [(ngModel)]="empleado.apellido1" name="apellido1">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="apellido2" class="col-form-label col-sm-2">Apellido2</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" [(ngModel)]="empleado.apellido2" name="apellido2">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="fechaNac" class="col-form-label col-sm-2">Fecha Nacimiento</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" [(ngModel)]="empleado.fechaNac" name="fechaNac">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="email" class="col-form-label col-sm-2">Email</label>
+        <div class="col-sm-6">
+          <input type="email" class="form-control" [(ngModel)]="empleado.email" name="email">
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-6">
+          <button class="btn btn-primary" role="button" (click)='create()' *ngIf="!empleado.id else elseBlock">Crear</button>
+          <ng-template #elseBlock>
+            <button class="btn btn-primary" role="button" (click)='update()'>Editar</button>
+          </ng-template>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
