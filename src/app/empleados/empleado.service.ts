@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Empleado } from './empleado';
 import { Observable, throwError } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient,HttpRequest, HttpEvent } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
-import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 
 @Injectable()
 export class EmpleadoService {
   private urlEndPoint: string = 'http://localhost:8080/api/empleados';
-
-  private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'})
 
   constructor(private http: HttpClient,
   private router: Router) { }
@@ -22,11 +19,16 @@ export class EmpleadoService {
   }
 
   create(empleado: Empleado) : Observable<Empleado> {
-    return this.http.post<Empleado>(this.urlEndPoint, empleado, {headers: this.httpHeaders})
+    return this.http.post(this.urlEndPoint, empleado)
     .pipe(
+      map((response: any) => response.empleado as Empleado),
       catchError(e => {
-        console.log(e.error.mensaje);
-        Swal.fire('Error al crear el empleado', e.error.mensaje, 'error');
+        if(e.status == 400){
+          return throwError(e);
+        }
+        if (e.error.mensaje){
+          console.error(e.error.mensaje);
+        }
         return throwError(e);
       })
     );
@@ -35,35 +37,50 @@ export class EmpleadoService {
   getEmpleado(id: number): Observable<Empleado>{
     return this.http.get<Empleado>(`${this.urlEndPoint}/${id}`).pipe(
       catchError( e => {
-        this.router.navigate(['/empleados']);
-        console.log(e.error.mensaje);
-        Swal.fire('Error al editar', e.error.mensaje, 'error');
+        if(e.status != 401  && e.error.mensaje ){
+          this.router.navigate(['/empleados']);
+          console.log(e.error.mensaje);
+        }
         return throwError(e);
       })
     );
   }
 
-  update(empleado: Empleado): Observable<Empleado>{
-    return this.http.put<Empleado>(`${this.urlEndPoint}/${empleado.id}`, empleado, {headers: this.httpHeaders})
+  update(empleado: Empleado): Observable<any>{
+    return this.http.put<any>(`${this.urlEndPoint}/${empleado.id}`, empleado)
     .pipe(
       catchError( e => {
-        this.router.navigate(['/empleados']);
-        console.log(e.error.mensaje);
-        Swal.fire('Error al editar', e.error.mensaje, 'error');
+        if(e.status == 400){
+          return throwError(e);
+        }
+        if(e.error.mensaje){
+          console.log(e.error.mensaje);
+        }
         return throwError(e);
       })
     );
   }
 
   delete(id: number): Observable<Empleado>{
-    return this.http.delete<Empleado>(`${this.urlEndPoint}/${id}`, {headers: this.httpHeaders})
+    return this.http.delete<Empleado>(`${this.urlEndPoint}/${id}`)
     .pipe(
       catchError( e => {
-        this.router.navigate(['/empleados']);
-        console.log(e.error.mensaje);
-        Swal.fire('Error al eliminar', e.error.mensaje, 'error');
+        if (e.error.mensaje) {
+          console.error(e.error.mensaje);
+        }
         return throwError(e);
       })
     );
+  }
+
+  subirFoto(archivo: File, id){
+    let formData = new FormData();
+    formData.append("archivo", archivo);
+    formData.append("id", id);
+    const req = new HttpRequest('POST', `${this.urlEndPoint}/upload`, formData,
+    {reportProgress: true});
+    return this.http.request(req);
+
+
   }
 }

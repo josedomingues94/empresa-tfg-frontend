@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Empleado } from './empleado';
 import { EmpleadoService } from './empleado.service';
+import { ModalService } from './perfil/modal.service';
+import { AuthService } from '../usuarios/auth.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -10,8 +12,10 @@ import Swal from 'sweetalert2';
 export class EmpleadosComponent implements OnInit {
 
   empleados: Empleado[];
+  empleadoSeleccionado: Empleado;
 
-  constructor(private empleadoService: EmpleadoService) { }
+  constructor(private empleadoService: EmpleadoService, public authService: AuthService,
+  private moadalService: ModalService) { }
 
   ngOnInit() {
     this.empleadoService.getEmpleados().subscribe(
@@ -60,6 +64,11 @@ export class EmpleadosComponent implements OnInit {
         )
       }
     })
+  }
+
+  abrirModal(empleado: Empleado){
+    this.empleadoSeleccionado = empleado;
+    this.moadalService.abrirModal();
   }
 
 }

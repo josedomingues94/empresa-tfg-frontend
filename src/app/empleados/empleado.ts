@@ -6,6 +6,6 @@ export class Empleado {
   apellido2: string;
   fechaNac: Date;
   email: string;
-
+  foto: string;
 
 }

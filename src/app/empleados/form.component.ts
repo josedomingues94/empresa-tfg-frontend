@@ -12,6 +12,7 @@ export class FormComponent implements OnInit {
 
   empleado: Empleado = new Empleado()
   titulo:string = "Crear Empleado"
+  errores: string[];
 
   constructor(private empleadoService: EmpleadoService,
     private router: Router,
@@ -35,6 +36,11 @@ export class FormComponent implements OnInit {
       .subscribe(empleado => {
         this.router.navigate(['/empleados'])
         swal.fire('Nuevo empleado', `Empleado ${empleado.nombre} creado con éxito!`, 'success');
+      },
+      err => {
+        this.errores = err.error.errors as string[];
+        console.log('Cod error', err.status)
+        console.log(err.error.errors)
       }
       );
   }
@@ -44,6 +50,11 @@ export class FormComponent implements OnInit {
     .subscribe( empleado => {
       this.router.navigate(['/empleados'])
       swal.fire('Empleado Actualizado', `Empleado ${empleado.nombre} actualizado con éxito!`, 'success');
+    },
+    err => {
+      this.errores = err.error.errors as string[];
+      console.log('Cod error', err.status)
+      console.log(err.error.errors)
     }
 
     )
