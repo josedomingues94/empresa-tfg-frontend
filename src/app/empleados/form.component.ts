@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Empleado } from './empleado';
-import { EmpleadoService} from './empleado.service';
-import {Router, ActivatedRoute} from '@angular/router'
-import swal from 'sweetalert2'
+import { EmpleadoService } from './empleado.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form',
@@ -10,8 +10,8 @@ import swal from 'sweetalert2'
 })
 export class FormComponent implements OnInit {
 
-  empleado: Empleado = new Empleado()
-  titulo:string = "Crear Empleado"
+  public empleado: Empleado = new Empleado();
+  titulo: string = "Crear Empleado";
   errores: string[];
 
   constructor(private empleadoService: EmpleadoService,
@@ -19,45 +19,45 @@ export class FormComponent implements OnInit {
     private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
-    this.cargarEmpleado()
-  }
-
-  cargarEmpleado(): void{
-    this.activatedRoute.params.subscribe(params => {
-      let id = params['id']
-      if(id){
-        this.empleadoService.getEmpleado(id).subscribe((empleado) => this.empleado = empleado)
+    this.activatedRoute.paramMap.subscribe(params => {
+      let id = +params.get('id');
+      if (id) {
+        this.empleadoService.getEmpleado(id).subscribe((empleado) => this.empleado = empleado);
       }
-    })
+    });
   }
 
   create(): void {
+    console.log(this.empleado);
     this.empleadoService.create(this.empleado)
-      .subscribe(empleado => {
-        this.router.navigate(['/empleados'])
-        swal.fire('Nuevo empleado', `Empleado ${empleado.nombre} creado con éxito!`, 'success');
-      },
-      err => {
-        this.errores = err.error.errors as string[];
-        console.log('Cod error', err.status)
-        console.log(err.error.errors)
-      }
+      .subscribe(
+        empleado => {
+          this.router.navigate(['/empleados']);
+          swal.fire('Nuevo empleado', `El empleado ${empleado.nombre} ha sido creado con éxito`, 'success');
+        },
+        err => {
+          this.errores = err.error.errors as string[];
+          console.error('Código del error desde el backend: ' + err.status);
+          console.error(err.error.errors);
+        }
       );
   }
 
-  update():void{
+  update(): void {
+    console.log(this.empleado);
     this.empleadoService.update(this.empleado)
-    .subscribe( empleado => {
-      this.router.navigate(['/empleados'])
-      swal.fire('Empleado Actualizado', `Empleado ${empleado.nombre} actualizado con éxito!`, 'success');
-    },
-    err => {
-      this.errores = err.error.errors as string[];
-      console.log('Cod error', err.status)
-      console.log(err.error.errors)
-    }
-
-    )
+      .subscribe(
+        json => {
+          this.router.navigate(['/empleados']);
+          swal.fire('Cliente Actualizado', `${json.mensaje}: ${json.empleado.nombre}`, 'success');
+        },
+        err => {
+          this.errores = err.error.errors as string[];
+          console.error('Código del error desde el backend: ' + err.status);
+          console.error(err.error.errors);
+        }
+      )
   }
+
 
 }

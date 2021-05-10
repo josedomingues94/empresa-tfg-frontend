@@ -4,7 +4,7 @@ export class Empleado {
   nombre: string;
   apellido1: string;
   apellido2: string;
-  fechaNac: Date;
+  createAt: Date;
   email: string;
   foto: string;
 

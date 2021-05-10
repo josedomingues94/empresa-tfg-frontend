@@ -11,15 +11,15 @@ export class ModalService {
 
   constructor() { }
 
-  get notificarUpload(): EventEmitter<any>{
+  get notificarUpload(): EventEmitter<any> {
     return this._notificarUpload;
   }
 
-  abrirModal(){
-    this.modal= true;
+  abrirModal() {
+    this.modal = true;
   }
 
-  cerrarModal(){
+  cerrarModal() {
     this.modal = false;
   }
 }

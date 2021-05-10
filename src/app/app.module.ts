@@ -15,14 +15,16 @@ import { FormComponent } from './empleados/form.component';
 import { FormsModule } from '@angular/forms';
 import { LoginComponent } from './usuarios/login.component';
 import { PerfilComponent } from './empleados/perfil/perfil.component';
+import { PaginadorComponent } from './paginador/paginador.component';
 
 
 const routes: Routes = [
-  {path: '', redirectTo: '/usuarios/login', pathMatch: 'full'},
+  {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'login', component: LoginComponent},
-  {path: 'empleados', component: EmpleadosComponent,canActivate: ['AuthGuard'] },
-  {path: 'empleados/form', component: FormComponent, canActivate: ['AuthGuard', 'RoleGuard'], data: {role: 'ROLE_ADMIN'} },
-  {path: 'empleados/form/:id', component: FormComponent, canActivate: ['AuthGuard', 'RoleGuard'], data: {role: 'ROLE_ADMIN'} }
+  {path: 'empleados', component: EmpleadosComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_USER'} },
+  {path: 'empleados/page/:page', component: EmpleadosComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_USER'} },
+  {path: 'empleados/form', component: FormComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_ADMIN'} },
+  {path: 'empleados/form/:id', component: FormComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_ADMIN'} }
 
 
 ];
@@ -35,6 +37,7 @@ const routes: Routes = [
     EmpleadosComponent,
     FormComponent,
     LoginComponent,
+    PaginadorComponent,
     PerfilComponent
   ],
   imports: [
