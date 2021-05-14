@@ -21,6 +21,8 @@ export class EmpleadoService {
       map((response: any) => {
         (response.content as Empleado[]).map(empleado => {
           empleado.nombre = empleado.nombre.toUpperCase();
+          empleado.apellido1 = empleado.apellido1.toUpperCase();
+          empleado.apellido2 = empleado.apellido2.toUpperCase();
           return empleado;
         });
         return response;

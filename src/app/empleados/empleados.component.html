@@ -39,7 +39,7 @@
           <td>{{ empleado.nombre }}</td>
           <td>{{ empleado.apellido1}}, {{ empleado.apellido2}}</td>
           <td>{{ empleado.email }}</td>
-          <td>{{ empleado.createAt | date:"EEEE dd, MMMM yyyy"}}</td>
+          <td *ngIf="authService.hasRole('ROLE_ADMIN')">{{ empleado.createAt | date:"EEEE dd, MMMM yyyy"}}</td>
           <td *ngIf="authService.hasRole('ROLE_ADMIN')">
             <button type="button" name="editar" [routerLink]="['/empleados/form', empleado.id]" class="btn btn-primary btn-sm">editar</button>
           </td>
@@ -49,6 +49,6 @@
         </tr>
       </tbody>
     </table>
-    <paginator-nav *ngIf="paginador" [paginador]="paginador"></paginator-nav>
+    <app-paginador *ngIf="paginador" [paginador]="paginador"></app-paginador>
   </div>
 </div>
