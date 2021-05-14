@@ -3,7 +3,6 @@ import { Empleado } from './empleado';
 import { HttpClient, HttpRequest, HttpEvent } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
-
 import { Router } from '@angular/router';
 
 @Injectable()
@@ -11,6 +10,7 @@ export class EmpleadoService {
   private urlEndPoint: string = 'http://localhost:8080/api/empleados';
 
   constructor(private http: HttpClient, private router: Router) { }
+
 
   getEmpleados(page: number): Observable<any> {
     return this.http.get(this.urlEndPoint + '/page/' + page).pipe(

@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Empleado } from './empleado';
 import { EmpleadoService } from './empleado.service';
 import { ModalService } from './perfil/modal.service';
-import Swal from 'sweetalert2';
+import swal from 'sweetalert2';
 import { tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../usuarios/auth.service';
 
 @Component({
-  selector: 'app-empleados',
+  selector: 'app-empleado',
   templateUrl: './empleados.component.html'
 })
 export class EmpleadosComponent implements OnInit {
@@ -43,7 +43,6 @@ export class EmpleadosComponent implements OnInit {
         });
     });
 
-
     this.modalService.notificarUpload.subscribe(empleado => {
       this.empleados = this.empleados.map(empleadoOriginal => {
         if (empleado.id == empleadoOriginal.id) {
@@ -55,51 +54,38 @@ export class EmpleadosComponent implements OnInit {
   }
 
   delete(empleado: Empleado): void {
-    const swalWithBootstrapButtons = Swal.mixin({
-      customClass: {
-        confirmButton: 'btn btn-success',
-        cancelButton: 'btn btn-danger mr-3'
-      },
-      buttonsStyling: false
-    })
-    swalWithBootstrapButtons.fire({
-      title: '¿Está seguro?',
-      text: `Dando de baja el vehiculo con matricula ${empleado.id} ${empleado.nombre}, esta acción no se puede deshacer`,
+    const swalWithBootstrapButtons = swal.mixin({
+     customClass: {
+       confirmButton: 'btn btn-success',
+       cancelButton: 'btn btn-danger mr-3'
+     },
+     buttonsStyling: false
+   })
+   swalWithBootstrapButtons.fire({
+      title: 'Está seguro?',
+      text: `¿Seguro que desea eliminar al cliente ${empleado.nombre} ${empleado.apellido1}?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Dar de baja',
       cancelButtonText: 'Cancelar',
       reverseButtons: true
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (result.value) {
+
         this.empleadoService.delete(empleado.id).subscribe(
-          response => {
-            this.ngOnInit();
+          () => {
+            this.empleados = this.empleados.filter(emp => emp !== empleado)
             swalWithBootstrapButtons.fire(
-              'Dado de baja',
-              `El vehiculo con matricula ${empleado.id} fue dado de baja con exíto!`,
+              'Cliente Eliminado!',
+              `Cliente ${empleado.nombre} eliminado con éxito.`,
               'success'
             )
           }
-
-        );
-
-
-      } else if (
-        /* Read more about handling dismissals below */
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-        swalWithBootstrapButtons.fire(
-          'Cancelado',
-          'Cambio de estado no realizado',
-          'error'
         )
+
       }
-    })
+    });
   }
-
-
-
 
   abrirModal(empleado: Empleado) {
     this.empleadoSeleccionado = empleado;

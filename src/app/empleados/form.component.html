@@ -8,17 +8,14 @@
   <div class="card-header">{{ titulo }}</div>
   <div class="card-body">
 
-    <form #empleadosForm="ngForm">
+    <form #empleadoForm="ngForm">
       <div class="form-group row">
         <label for="dni" class="col-form-label col-sm-2">DNI</label>
         <div class="col-sm-6">
           <input type="text" class="form-control" [(ngModel)]="empleado.dni" name="dni" #dni="ngModel"> <!-- required minlength="4" -->
           <div class="alert alert-danger" *ngIf="dni.invalid && (dni.dirty || dni.touched)">
             <div *ngIf="dni.errors.required">
-              DeNI es requerido
-            </div>
-            <div *ngIf="dni.errors.minlength">
-              DNI debe tener  numeros y una letra
+              Dni es requerido
             </div>
           </div>
         </div>
@@ -32,15 +29,12 @@
             <div *ngIf="nombre.errors.required">
               Nombre es requerido
             </div>
-            <div *ngIf="nombre.errors.minlength">
-              Nombre debe tener al menos 4 caracteres
-            </div>
           </div>
         </div>
       </div>
 
       <div class="form-group row">
-        <label for="apellido1" class="col-form-label col-sm-2">Apellido1</label>
+        <label for="apellido1" class="col-form-label col-sm-2">Apellido 1</label>
         <div class="col-sm-6">
           <input type="text" class="form-control" [(ngModel)]="empleado.apellido1" name="apellido1" #apellido1="ngModel"> <!-- required -->
           <div class="alert alert-danger" *ngIf="apellido1.invalid && (apellido1.dirty || apellido1.touched)">
@@ -52,7 +46,7 @@
       </div>
 
       <div class="form-group row">
-        <label for="apellido2" class="col-form-label col-sm-2">Apellido2</label>
+        <label for="apellido2" class="col-form-label col-sm-2">Apellido 2</label>
         <div class="col-sm-6">
           <input type="text" class="form-control" [(ngModel)]="empleado.apellido2" name="apellido2" #apellido2="ngModel"> <!-- required -->
           <div class="alert alert-danger" *ngIf="apellido2.invalid && (apellido2.dirty || apellido2.touched)">
@@ -81,15 +75,7 @@
       <div class="form-group row">
         <label for="createAt" class="col-form-label col-sm-2">Fecha</label>
         <div class="col-sm-6">
-          <input type="date" class="form-control" [(ngModel)]="empleado.createAt" name="createAt" #createAt="ngModel"> <!-- required email -->
-          <div class="alert alert-danger" *ngIf="createAt.invalid && (createAt.dirty || createAt.touched)">
-            <div *ngIf="createAt.errors.required">
-              Email es requerido
-            </div>
-            <div *ngIf="createAt.errors.email">
-              Email debe tener un formato válido
-            </div>
-          </div>
+          <input type="date" class="form-control" [(ngModel)]="empleado.createAt" name="createAt" style="display:inline; width:300px;">
         </div>
       </div>
 
@@ -104,5 +90,6 @@
         </div>
       </div>
     </form>
+
   </div>
 </div>

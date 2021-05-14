@@ -1,7 +1,7 @@
 <perfil-empleado *ngIf="empleadoSeleccionado" [empleado] ="empleadoSeleccionado"></perfil-empleado>
 
 <div class="card border-primary mb-3">
-  <div class="card-header">Empleados</div>
+  <div class="card-header">Empleado</div>
   <div class="card-body text-primary">
     <h5 class="card-title">Listado de empleados</h5>
     <div class="my-2 text-left">
@@ -16,11 +16,11 @@
       <thead>
         <tr>
           <th *ngIf="authService.hasRole('ROLE_USER')">#</th>
-          <th *ngIf="authService.hasRole('ROLE_ADMIN')">dni</th>
+          <th *ngIf="authService.hasRole('ROLE_ADMIN')">Dni</th>
           <th>nombre</th>
           <th>apellidos</th>
           <th>email</th>
-          <th>fecha</th>
+          <th *ngIf="authService.hasRole('ROLE_ADMIN')">fecha</th>
           <th *ngIf="authService.hasRole('ROLE_ADMIN')">editar</th>
           <th *ngIf="authService.hasRole('ROLE_ADMIN')">eliminar</th>
         </tr>
@@ -37,18 +37,18 @@
             </td>
           <td *ngIf="authService.hasRole('ROLE_ADMIN')">{{ empleado.dni }}</td>
           <td>{{ empleado.nombre }}</td>
-          <td>{{ empleado.apellido1}}, {{ empleado.apellido2}} </td>
+          <td>{{ empleado.apellido1}}, {{ empleado.apellido2}}</td>
           <td>{{ empleado.email }}</td>
           <td>{{ empleado.createAt | date:"EEEE dd, MMMM yyyy"}}</td>
           <td *ngIf="authService.hasRole('ROLE_ADMIN')">
             <button type="button" name="editar" [routerLink]="['/empleados/form', empleado.id]" class="btn btn-primary btn-sm">editar</button>
           </td>
           <td *ngIf="authService.hasRole('ROLE_ADMIN')">
-            <button type="button" name="eliminar" (click)='delete(empleado)' class="btn btn-danger btn-sm"><span class="material-icons">delete</span></button>
+            <button type="button" name="eliminar" (click)='delete(empleado)' class="btn btn-danger btn-sm">eliminar</button>
           </td>
         </tr>
       </tbody>
     </table>
-    <app-paginador *ngIf="paginador" [paginador]="paginador"></app-paginador>
+    <paginator-nav *ngIf="paginador" [paginador]="paginador"></paginator-nav>
   </div>
 </div>

@@ -1,5 +1,6 @@
- import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { BrowserModule} from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthGuard } from './usuarios/guard/auth.guard';
 import { RoleGuard } from './usuarios/guard/role.guard';
 import { TokenInterceptor } from './usuarios/interceptors/token.interceptor';
@@ -12,10 +13,11 @@ import { EmpleadoService } from './empleados/empleado.service';
 import { RouterModule, Routes} from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormComponent } from './empleados/form.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { LoginComponent } from './usuarios/login.component';
 import { PerfilComponent } from './empleados/perfil/perfil.component';
 import { PaginadorComponent } from './paginador/paginador.component';
+
 
 
 const routes: Routes = [
@@ -44,7 +46,8 @@ const routes: Routes = [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    BrowserAnimationsModule, ReactiveFormsModule
   ],
   providers: [EmpleadoService,
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},

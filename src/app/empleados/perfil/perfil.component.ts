@@ -1,11 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Empleado } from '../empleado';
 import { EmpleadoService } from '../empleado.service';
-import { HttpEventType } from '@angular/common/http';
 import { ModalService } from './modal.service';
+import swal from 'sweetalert2';
+import { HttpEventType } from '@angular/common/http';
 import { AuthService } from '../../usuarios/auth.service';
 
-import swal from 'sweetalert2';
 
 @Component({
   selector: 'perfil-empleado',
@@ -16,7 +16,7 @@ export class PerfilComponent implements OnInit {
 
   @Input() empleado: Empleado;
 
-  titulo: string = "Detalle del empleado";
+  titulo: string = "Detalle del cliente";
   private fotoSeleccionada: File;
   progreso: number = 0;
 
