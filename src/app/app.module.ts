@@ -17,16 +17,27 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { LoginComponent } from './usuarios/login.component';
 import { PerfilComponent } from './empleados/perfil/perfil.component';
 import { PaginadorComponent } from './paginador/paginador.component';
+import { UsuarioperfilComponent } from './usuarios/usuarioperfil.component';
+import { OficinasComponent } from './oficinas/oficinas.component';
+import { OficinaService } from './oficinas/oficina.service';
+import { FormComponentOficina } from './oficinas/form.component.oficina';
+import { PaginadorOficinasComponent } from './paginador-oficinas/paginador-oficinas.component';
+
 
 
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'login', component: LoginComponent},
+  {path: 'usuarios/perfil', component: UsuarioperfilComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_USER'} },
   {path: 'empleados', component: EmpleadosComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_USER'} },
   {path: 'empleados/page/:page', component: EmpleadosComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_USER'} },
   {path: 'empleados/form', component: FormComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_ADMIN'} },
-  {path: 'empleados/form/:id', component: FormComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_ADMIN'} }
+  {path: 'empleados/form/:id', component: FormComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_ADMIN'} },
+  {path: 'oficinas', component: OficinasComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_USER'} },
+  {path: 'oficinas/page/:page', component: OficinasComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_USER'} },
+  {path: 'oficinas/form', component: FormComponentOficina, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_ADMIN'} },
+  {path: 'oficinas/form/:id', component: FormComponentOficina, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_ADMIN'} }
 
 
 ];
@@ -38,9 +49,13 @@ const routes: Routes = [
     FooterComponent,
     EmpleadosComponent,
     FormComponent,
+    FormComponentOficina,
     LoginComponent,
     PaginadorComponent,
-    PerfilComponent
+    PerfilComponent,
+    UsuarioperfilComponent,
+    OficinasComponent,
+    PaginadorOficinasComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +64,11 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     BrowserAnimationsModule, ReactiveFormsModule
   ],
-  providers: [EmpleadoService,
+  providers: [
+    EmpleadoService,
+    OficinaService,
+    FormComponent,
+    FormComponentOficina,
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
 

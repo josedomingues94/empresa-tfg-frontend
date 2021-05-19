@@ -7,7 +7,7 @@ export class ModalService {
 
   modal: boolean = false;
 
-  private _notificarUpload = new EventEmitter<any>();
+  public _notificarUpload = new EventEmitter<any>();
 
   constructor() { }
 

@@ -1,0 +1,41 @@
+<div class="card border-primary mb-3">
+  <div class="card-header">Oficinas</div>
+  <div class="card-body text-primary">
+    <h5 class="card-title">Listado de oficinas</h5>
+    <div class="my-2 text-left">
+      <button *ngIf="authService.hasRole('ROLE_ADMIN')" class="btn btn-rounded btn-primary" type="button" [routerLink]="['/oficinas/form']">
+        Crear Oficina
+      </button>
+    </div>
+    <div *ngIf="oficinas?.length == 0" class="alert alert-info">
+      No hay registros en la base de datos!
+    </div>
+    <table class="table table-bordered table-striped" *ngIf="oficinas?.length>0">
+      <thead>
+        <tr>
+          <th>Oficina</th>
+          <th>Direccion</th>
+          <th>Provincia</th>
+          <th>Ciudad</th>
+          <th *ngIf="authService.hasRole('ROLE_ADMIN')">editar</th>
+          <th *ngIf="authService.hasRole('ROLE_ADMIN')">eliminar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let oficina of oficinas">
+          <td>{{ oficina.nombre }}</td>
+          <td>{{ oficina.direccion}}</td>
+          <td>{{ oficina.provincia }}</td>
+          <td>{{ oficina.ciudad}}</td>
+          <td *ngIf="authService.hasRole('ROLE_ADMIN')">
+            <button type="button" name="editar" [routerLink]="['/oficinas/form', oficina.id]" class="btn btn-primary btn-sm">editar</button>
+          </td>
+          <td *ngIf="authService.hasRole('ROLE_ADMIN')">
+            <button type="button" name="eliminar" (click)='delete(oficina)' class="btn btn-danger btn-sm">eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <app-paginador-oficinas *ngIf="paginador" [paginador]="paginador"></app-paginador-oficinas>
+  </div>
+</div>

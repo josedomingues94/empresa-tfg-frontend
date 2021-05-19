@@ -15,7 +15,7 @@
     <table class="table table-bordered table-striped" *ngIf="empleados?.length>0">
       <thead>
         <tr>
-          <th *ngIf="authService.hasRole('ROLE_USER')">#</th>
+          <th *ngIf="authService.hasRole('ROLE_USER')">Perfil</th>
           <th *ngIf="authService.hasRole('ROLE_ADMIN')">Dni</th>
           <th>nombre</th>
           <th>apellidos</th>
