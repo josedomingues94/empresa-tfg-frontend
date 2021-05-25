@@ -15,6 +15,9 @@ export class OficinasComponent implements OnInit {
 
   oficinas: Oficina[];
   paginador: any;
+  nombre: string;
+  ciudad: string;
+  provincia: string;
 
   constructor(private oficinaService: OficinaService,
   public authService: AuthService,
@@ -23,17 +26,15 @@ export class OficinasComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(params => {
       let pagina: number = +params.get('page');
-
-      if(!pagina){
+      if (!pagina) {
         pagina = 0;
       }
-      this.oficinaService.getOficinas(pagina).subscribe(
-        response => {
-          this.oficinas = response.content as Oficina[];
-          this.paginador = response;
-        }
-      );
-    });
+      this.oficinaService.getOficinas(this.nombre, this.ciudad, this.provincia, pagina)
+      .subscribe(response => {
+        this.oficinas = response.content as Oficina[];
+        this.paginador = response;
+      });
+    })
   }
 
   delete(oficina: Oficina): void {
@@ -69,6 +70,39 @@ export class OficinasComponent implements OnInit {
     });
   }
 
+  buscarOficinas() {
+    this.activatedRoute.paramMap.subscribe(params => {
+      let pagina: number = +params.get('page');
+      if (!pagina) {
+        pagina = 0;
+      }
+      if(this.nombre == ""){
+        this.nombre = undefined;
+      }
+      if(this.ciudad == ""){
+        this.ciudad = undefined;
+      }
+      if(this.provincia == ""){
+        this.provincia = undefined;
+      }
+      this.oficinaService.getOficinas(this.nombre, this.ciudad, this.provincia, pagina).pipe(
+        tap(response => {
+          this.oficinas = response.content;
+          this.oficinas.forEach(oficina => {
+            this.oficinaService.obtnenerOficina(oficina.id).subscribe(
+              oficinaFiltrada => oficina = oficinaFiltrada
+            )
+          })
+          this.paginador = response;
+        })
 
+      ).subscribe();
+    })
+  }
 
+  limpiar() {
+    this.nombre = undefined;
+    this.ciudad = undefined;
+    this.provincia = undefined;
+  }
 }

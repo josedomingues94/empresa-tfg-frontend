@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Usuario } from './usuario';
+import { Router } from '@angular/router';
+import { UsuarioService } from './usuario.service';
+import { UsuarioPerfil } from './usuarioperfil';
+
 
 
 @Component({

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Oficina } from './oficina';
-import { HttpClient, HttpRequest, HttpEvent} from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpEvent, HttpHeaders, HttpParams} from '@angular/common/http';
 import { map, catchError, tap} from 'rxjs/operators';
 import { Observable, throwError} from 'rxjs';
 import { Router } from '@angular/router';
@@ -15,21 +15,31 @@ export class OficinaService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  getOficinas(page: number): Observable<any>{
-    return this.http.get(this.urlEndPoint + '/page/' + page).pipe(
-      tap((response: any) => {
-        (response.content as Oficina[]).forEach(oficina => oficina.nombre);
-      }),
-      map((response: any) =>{
+  getOficinas(nombre: string, ciudad: string, provincia: string, page: number): Observable<any> {
+    let params = new HttpParams().set("nombre", nombre).set("ciudad", ciudad).set("provincia", provincia);
+    return this.http.get(`${this.urlEndPoint}/page/${page}`, {params:params}).pipe(
+      map((response: any) => {
         (response.content as Oficina[]).map(oficina => {
           oficina.nombre = oficina.nombre.toUpperCase();
-          oficina.provincia = oficina.provincia.toUpperCase();
           oficina.ciudad = oficina.ciudad.toUpperCase();
+          oficina.provincia = oficina.provincia.toUpperCase();
           return oficina;
         });
         return response;
       })
-    )
+      );
+  }
+
+  obtnenerOficina(id: number): Observable<Oficina> {
+    return this.http.get<Oficina>(`${this.urlEndPoint}/${id}`).pipe(
+      catchError(e => {
+        if (e.status == 400) {
+          return throwError(e);
+        }
+        console.error(e.error.mensaje);
+        return throwError(e);
+      })
+    );
   }
 
   create(oficina: Oficina): Observable<Oficina> {

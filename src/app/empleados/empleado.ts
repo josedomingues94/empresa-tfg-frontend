@@ -1,3 +1,5 @@
+import { Oficina } from '../oficinas/oficina';
+
 export class Empleado {
   id: number;
   dni: string;
@@ -7,5 +9,6 @@ export class Empleado {
   createAt: Date;
   email: string;
   foto: string;
+  oficina!: Oficina;
 
 }

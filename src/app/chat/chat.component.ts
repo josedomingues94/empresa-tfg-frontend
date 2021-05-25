@@ -1,0 +1,73 @@
+import { Component, OnInit } from '@angular/core';
+import { Client } from '@stomp/stompjs';
+import * as SockJS from 'sockjs-client';
+import { Mensaje } from './mensaje';
+
+@Component({
+  selector: 'app-chat',
+  templateUrl: './chat.component.html',
+  styleUrls: ['./chat.component.css']
+})
+export class ChatComponent implements OnInit {
+
+  constructor() { }
+  private client: Client;
+  conectado: boolean = false;
+  mensaje: Mensaje = new Mensaje();
+  mensajes: Mensaje[] = [];
+  escribiendo: string;
+
+  ngOnInit() {
+    this.client = new Client();
+/*
+    this.client.webSocketFactory = () => {
+      return new SockJS("http://localhost:8080/chat-websocket");
+    }
+*/
+    this.client.onConnect = (frame) => {
+      console.log('conectados: ' + this.client.connected + ' : ' + frame);
+      this.conectado = true;
+      this.client.subscribe('/chat/mensaje', e => {
+        let mensaje: Mensaje = JSON.parse(e.body)as Mensaje;
+        mensaje.fecha = new Date(mensaje.fecha);
+
+        if(!this.mensaje.color && mensaje.tipo == 'Nuevo_usuario' &&
+         this.mensaje.username == mensaje.username){
+           this.mensaje.color = mensaje.color;
+        }
+        this.mensajes.push(mensaje);
+      });
+      this.client.subscribe('/chat/escribiendo', e => {
+        this.escribiendo = e.body;
+        setTimeout(() => this.escribiendo = '', 3000);
+      });
+      this.mensaje.tipo = 'Nuevo_usuario';
+      this.client.publish({destination: '/app/mensaje', body: JSON.stringify(this.mensaje)});
+    }
+    this.client.onDisconnect = (frame) => {
+      console.log('desconectados: ' + !this.client.connected + ' : ' + frame);
+      this.conectado = false;
+    }
+  }
+
+  conectar(): void {
+    this.client.activate();
+  }
+
+  desconectar(): void {
+    this.client.deactivate();
+  }
+
+  enviarMensaje(): void {
+    this.mensaje.tipo = 'Mensaje';
+    this.client.publish({destination: '/app/mensaje', body: JSON.stringify(this.mensaje)});
+    this.mensaje.texto = '';
+  }
+
+  escribiendoEvento(): void {
+    this.client.publish({destination: '/app/escribiendo', body: this.mensaje.username});
+  }
+
+
+
+}

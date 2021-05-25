@@ -6,6 +6,9 @@ import swal from 'sweetalert2';
 import { tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../usuarios/auth.service';
+import {OficinaService } from '../oficinas/oficina.service';
+import {OficinasComponent } from '../oficinas/oficinas.component';
+import { Oficina } from '../oficinas/oficina';
 
 @Component({
   selector: 'app-empleado',
@@ -16,31 +19,33 @@ export class EmpleadosComponent implements OnInit {
   empleados: Empleado[];
   paginador: any;
   empleadoSeleccionado: Empleado;
+  nombre: string;
+  apellido1: string;
+  apellido2: string;
+  oficinasComponent: OficinasComponent;
+
 
   constructor(private empleadoService: EmpleadoService,
     private modalService: ModalService,
     public authService: AuthService,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute,
+    private oficinasService: OficinaService) { }
 
   ngOnInit() {
-
     this.activatedRoute.paramMap.subscribe(params => {
       let page: number = +params.get('page');
-
       if (!page) {
         page = 0;
       }
-
-      this.empleadoService.getEmpleados(page)
-        .pipe(
-          tap(response => {
-            console.log('ClientesComponent: tap 3');
-            (response.content as Empleado[]).forEach(empleado => console.log(empleado.nombre));
+      this.empleadoService.getEmpleados(this.nombre, this.apellido1,this.apellido2, page)
+        .subscribe(
+          response => {
+              (this.empleados = response.content as Empleado[]).forEach(empleado =>{
+                this.empleadoService.obtnenerEmpleado(empleado.id).subscribe(empleadoF => empleado = empleadoF);
+              });
+              this.paginador = response;
           })
-        ).subscribe(response => {
-          this.empleados = response.content as Empleado[];
-          this.paginador = response;
-        });
+
     });
 
     this.modalService.notificarUpload.subscribe(empleado => {
@@ -85,6 +90,45 @@ export class EmpleadosComponent implements OnInit {
 
       }
     });
+  }
+
+  buscarEmpleados() {
+    this.activatedRoute.paramMap.subscribe(params => {
+      let pagina: number = +params.get('page');
+      if (!pagina) {
+        pagina = 0;
+      }
+      if(this.nombre == ""){
+        this.nombre = undefined;
+      }
+      if(this.apellido1 == ""){
+        this.apellido1 = undefined;
+      }
+      if(this.apellido2 == ""){
+        this.apellido2= undefined;
+      }
+      this.empleadoService.getEmpleados(this.nombre, this.apellido1, this.apellido2, pagina).pipe(
+        tap(response => {
+          this.empleados = response.content;
+          console.log(response.content);
+          this.empleados.forEach(empleado =>{
+            this.empleadoService.obtnenerEmpleado(empleado.id).subscribe(
+              empleadoFiltrado => empleado = empleadoFiltrado
+
+            )
+          })
+          this.paginador = response;
+          console.log(response);
+        })
+
+      ).subscribe();
+    })
+  }
+
+  limpiar() {
+    this.nombre = undefined;
+    this.apellido1 = undefined;
+    this.apellido2 = undefined;
   }
 
   abrirModal(empleado: Empleado) {

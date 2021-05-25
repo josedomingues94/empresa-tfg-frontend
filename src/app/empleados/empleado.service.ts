@@ -1,21 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Empleado } from './empleado';
-import { HttpClient, HttpRequest, HttpEvent } from '@angular/common/http';
+import { HttpClient, HttpRequest,HttpHeaders, HttpEvent, HttpParams } from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { Oficina } from '../oficinas/oficina';
+
 
 @Injectable()
 export class EmpleadoService {
   private urlEndPoint: string = 'http://localhost:8080/api/empleados';
+  private httpHeaders=new HttpHeaders({'Content-Type':'application/json'});
 
   constructor(private http: HttpClient, private router: Router) { }
 
-
-  getEmpleados(page: number): Observable<any> {
-    return this.http.get(this.urlEndPoint + '/page/' + page).pipe(
+  getEmpleados(nombre: string, apellido1: string, apellido2: string, page: number): Observable<any> {
+    let params = new HttpParams().set("nombre", nombre).set("apellido1", apellido1).set("apellido2", apellido2);
+    return this.http.get(`${this.urlEndPoint}/page/${page}`, {params:params}).pipe(
       tap((response: any) => {
-        console.log('ClienteService: tap 1');
         (response.content as Empleado[]).forEach(empleado => console.log(empleado.nombre));
       }),
       map((response: any) => {
@@ -28,10 +30,23 @@ export class EmpleadoService {
         return response;
       }),
       tap(response => {
-        console.log('ClienteService: tap 2');
         (response.content as Empleado[]).forEach(empleado => console.log(empleado.nombre));
       }));
   }
+
+  obtnenerEmpleado(id: number): Observable<Empleado> {
+    return this.http.get<Empleado>(`${this.urlEndPoint}/${id}`).pipe(
+      catchError(e => {
+        if (e.status == 400) {
+          return throwError(e);
+        }
+        console.error(e.error.mensaje);
+        return throwError(e);
+      })
+    );
+  }
+
+
 
   create(empleado: Empleado): Observable<Empleado> {
     return this.http.post(this.urlEndPoint, empleado)
@@ -48,7 +63,7 @@ export class EmpleadoService {
         }));
   }
 
-  getEmpleado(id): Observable<Empleado> {
+  getEmpleado(id: number): Observable<any> {
     return this.http.get<Empleado>(`${this.urlEndPoint}/${id}`).pipe(
       catchError(e => {
         if (e.status != 401 && e.error.mensaje) {

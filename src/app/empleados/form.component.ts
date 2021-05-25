@@ -3,6 +3,7 @@ import { Empleado } from './empleado';
 import { EmpleadoService } from './empleado.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import swal from 'sweetalert2';
+import { Oficina } from '../oficinas/oficina';
 
 @Component({
   selector: 'app-form',
@@ -12,7 +13,7 @@ export class FormComponent implements OnInit {
 
   public empleado: Empleado = new Empleado();
   titulo: string = "Crear Cliente";
-
+  oficina: Oficina[];
   errores: string[];
 
   constructor(public empleadoService: EmpleadoService,
@@ -59,5 +60,13 @@ export class FormComponent implements OnInit {
           console.error(err.error.errors);
         }
       )
+  }
+
+  compararOficina(o1: Oficina, o2: Oficina): boolean {
+    if (o1 === undefined && o2 === undefined) {
+      return true;
+    }
+
+    return o1 === null || o2 === null || o1 === undefined || o2 === undefined ? false : o1.id === o2.id;
   }
 }

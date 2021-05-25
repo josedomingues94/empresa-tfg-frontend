@@ -17,6 +17,7 @@
                 <li class="list-group-item active">{{empleado.nombre}}</li>
                 <li class="list-group-item">{{empleado.apellido1}}, {{empleado.apellido2}}</li>
                 <li class="list-group-item">{{empleado.email}}</li>
+                <li class="list-group-item">{{empleado.oficina.nombre}}</li>
               </ul>
 
               <div class="input-group mb-3" *ngIf="authService.hasRole('ROLE_ADMIN')">
