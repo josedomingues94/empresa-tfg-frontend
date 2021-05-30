@@ -15,8 +15,12 @@ export class EmpleadoService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
+  getOficinas(): Observable<Oficina[]> {
+    return this.http.get<Oficina[]>(`${this.urlEndPoint}/oficinas`);
+  }
+
   getEmpleados(nombre: string, apellido1: string, apellido2: string, email: string, page: number): Observable<any> {
-    let params = new HttpParams().set("nombre", nombre,).set("apellido1", apellido1).set("apellido2", apellido2).set("email", email);
+    let params = new HttpParams().set("nombre", nombre).set("apellido1", apellido1).set("apellido2", apellido2).set("email", email);
     return this.http.get(`${this.urlEndPoint}/page/${page}`, {params:params}).pipe(
       map((response: any) => {
         (response.content as Empleado[]).map(empleado => {
@@ -30,22 +34,10 @@ export class EmpleadoService {
       );
   }
 
-  obtnenerEmpleado(id: number): Observable<Empleado> {
-    return this.http.get<Empleado>(`${this.urlEndPoint}/${id}`).pipe(
-      catchError(e => {
-        if (e.status == 400) {
-          return throwError(e);
-        }
-        console.error(e.error.mensaje);
-        return throwError(e);
-      })
-    );
-  }
-
   create(empleado: Empleado): Observable<Empleado> {
     return this.http.post(this.urlEndPoint, empleado)
       .pipe(
-        map((response: any) => response.empelado as Empleado),
+        map((response: any) => response.empleado as Empleado),
         catchError(e => {
           if (e.status == 400) {
             return throwError(e);
@@ -57,15 +49,16 @@ export class EmpleadoService {
         }));
   }
 
-  getEmpleado(id: number): Observable<Empleado> {
+  getEmpleado(id): Observable<Empleado> {
     return this.http.get<Empleado>(`${this.urlEndPoint}/${id}`).pipe(
       catchError(e => {
-        if (e.status != 401 && e.error.mensaje) {
-          this.router.navigate(['/empleados']);
-          console.error(e.error.mensaje);
+        if (e.status == 400) {
+        this.router.navigate(['/empleados']);
         }
+        console.error(e.error.mensaje);
         return throwError(e);
-      }));
+      })
+    );
   }
 
   update(empleado: Empleado): Observable<any> {
@@ -101,9 +94,5 @@ export class EmpleadoService {
     });
 
     return this.http.request(req);
-  }
-
-  getOficinas():Observable<Oficina[]>{
-    return this.http.get<Oficina[]>(`${this.urlEndPoint}/oficinas`);
   }
 }

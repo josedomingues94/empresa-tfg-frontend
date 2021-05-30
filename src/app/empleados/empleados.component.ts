@@ -6,6 +6,7 @@ import swal from 'sweetalert2';
 import { tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../usuarios/auth.service';
+import { Oficina } from '../oficinas/oficina';
 
 @Component({
   selector: 'app-empleados',
@@ -28,16 +29,17 @@ export class EmpleadosComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(params => {
-      let pagina: number = +params.get('pagina');
-      if (!pagina) {
-        pagina = 0;
+      let page: number = +params.get('page');
+
+      if (!page) {
+        page = 0;
       }
-      this.empleadoService.getEmpleados(this.nombre, this.apellido1, this.apellido2, this.email, pagina)
+
+      this.empleadoService.getEmpleados(this.nombre, this.apellido1, this.apellido2, this.email, page)
         .subscribe(response => {
           this.empleados = response.content as Empleado[];
           this.paginador = response;
         });
-
     });
 
     this.modalService.notificarUpload.subscribe(empleado => {
@@ -110,7 +112,7 @@ export class EmpleadosComponent implements OnInit {
         tap(response => {
           this.empleados = response.content;
           this.empleados.forEach(empleado => {
-            this.empleadoService.obtnenerEmpleado(empleado.id).subscribe(
+            this.empleadoService.getEmpleado(empleado.id).subscribe(
               empleadoFiltrado => empleado = empleadoFiltrado
             )
           })

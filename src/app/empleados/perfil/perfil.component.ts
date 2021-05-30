@@ -5,6 +5,7 @@ import { ModalService } from './modal.service';
 import swal from 'sweetalert2';
 import { HttpEventType } from '@angular/common/http';
 import { AuthService } from '../../usuarios/auth.service';
+import { Oficina } from '../../oficinas/oficina';
 
 
 @Component({
@@ -16,11 +17,11 @@ export class PerfilComponent implements OnInit {
 
   @Input() empleado: Empleado;
 
-  titulo: string = "Detalle del cliente";
+  titulo: string = "Perfil del empleado";
   private fotoSeleccionada: File;
   progreso: number = 0;
 
-  constructor(private empleadoService: EmpleadoService,
+  constructor(public empleadoService: EmpleadoService,
     private authService: AuthService,
     public modalService: ModalService) { }
 
