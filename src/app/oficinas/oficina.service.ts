@@ -15,7 +15,7 @@ export class OficinaService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  buscardorOficinas(nombre: string, ciudad: string, provincia: string, page: number): Observable<any> {
+  getOficinas(nombre: string, ciudad: string, provincia: string, page: number): Observable<any> {
     let params = new HttpParams().set("nombre", nombre).set("ciudad", ciudad).set("provincia", provincia);
     return this.http.get(`${this.urlEndPoint}/page/${page}`, {params:params}).pipe(
       map((response: any) => {

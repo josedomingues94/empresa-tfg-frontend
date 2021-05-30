@@ -25,11 +25,11 @@ export class OficinasComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(params => {
-      let pagina: number = +params.get('pagina');
+      let pagina: number = +params.get('page');
       if (!pagina) {
         pagina = 0;
       }
-      this.oficinaService.buscardorOficinas(this.nombre, this.ciudad, this.provincia, pagina)
+      this.oficinaService.getOficinas(this.nombre, this.ciudad, this.provincia, pagina)
       .subscribe(response => {
         this.oficinas = response.content as Oficina[];
         this.paginador = response;
@@ -85,7 +85,7 @@ export class OficinasComponent implements OnInit {
       if(this.provincia == ""){
         this.provincia = undefined;
       }
-      this.oficinaService.buscardorOficinas(this.nombre, this.ciudad, this.provincia, pagina).pipe(
+      this.oficinaService.getOficinas(this.nombre, this.ciudad, this.provincia, pagina).pipe(
         tap(response => {
           this.oficinas = response.content;
           this.oficinas.forEach(oficina => {
