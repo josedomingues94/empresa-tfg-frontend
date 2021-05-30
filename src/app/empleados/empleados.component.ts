@@ -6,45 +6,37 @@ import swal from 'sweetalert2';
 import { tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../usuarios/auth.service';
-import {OficinaService } from '../oficinas/oficina.service';
-import {OficinasComponent } from '../oficinas/oficinas.component';
-import { Oficina } from '../oficinas/oficina';
 
 @Component({
-  selector: 'app-empleado',
+  selector: 'app-empleados',
   templateUrl: './empleados.component.html'
 })
 export class EmpleadosComponent implements OnInit {
 
   empleados: Empleado[];
   paginador: any;
-  empleadoSeleccionado: Empleado;
   nombre: string;
   apellido1: string;
   apellido2: string;
-  oficinasComponent: OficinasComponent;
-
+  email: string;
+  empleadoSeleccionado: Empleado;
 
   constructor(private empleadoService: EmpleadoService,
     private modalService: ModalService,
     public authService: AuthService,
-    private activatedRoute: ActivatedRoute,
-    private oficinasService: OficinaService) { }
+    private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(params => {
-      let page: number = +params.get('page');
-      if (!page) {
-        page = 0;
+      let pagina: number = +params.get('pagina');
+      if (!pagina) {
+        pagina = 0;
       }
-      this.empleadoService.getEmpleados(this.nombre, this.apellido1,this.apellido2, page)
-        .subscribe(
-          response => {
-              (this.empleados = response.content as Empleado[]).forEach(empleado =>{
-                this.empleadoService.obtnenerEmpleado(empleado.id).subscribe(empleadoF => empleado = empleadoF);
-              });
-              this.paginador = response;
-          })
+      this.empleadoService.getEmpleados(this.nombre, this.apellido1, this.apellido2, this.email, pagina)
+        .subscribe(response => {
+          this.empleados = response.content as Empleado[];
+          this.paginador = response;
+        });
 
     });
 
@@ -60,15 +52,15 @@ export class EmpleadosComponent implements OnInit {
 
   delete(empleado: Empleado): void {
     const swalWithBootstrapButtons = swal.mixin({
-     customClass: {
-       confirmButton: 'btn btn-success',
-       cancelButton: 'btn btn-danger mr-3'
-     },
-     buttonsStyling: false
-   })
-   swalWithBootstrapButtons.fire({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger mr-3'
+      },
+      buttonsStyling: false
+    })
+    swalWithBootstrapButtons.fire({
       title: 'Está seguro?',
-      text: `¿Seguro que desea eliminar al cliente ${empleado.nombre} ${empleado.apellido1}?`,
+      text: `¿Seguro que desea eliminar al cliente ${empleado.nombre}?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Dar de baja',
@@ -87,9 +79,13 @@ export class EmpleadosComponent implements OnInit {
             )
           }
         )
-
       }
     });
+  }
+
+  abrirModal(empleado: Empleado) {
+    this.empleadoSeleccionado = empleado;
+    this.modalService.abrirModal();
   }
 
   buscarEmpleados() {
@@ -105,20 +101,20 @@ export class EmpleadosComponent implements OnInit {
         this.apellido1 = undefined;
       }
       if(this.apellido2 == ""){
-        this.apellido2= undefined;
+        this.apellido2 = undefined;
       }
-      this.empleadoService.getEmpleados(this.nombre, this.apellido1, this.apellido2, pagina).pipe(
+      if(this.email == ""){
+        this.email = undefined;
+      }
+      this.empleadoService.getEmpleados(this.nombre, this.apellido1, this.apellido2, this.email, pagina).pipe(
         tap(response => {
           this.empleados = response.content;
-          console.log(response.content);
-          this.empleados.forEach(empleado =>{
+          this.empleados.forEach(empleado => {
             this.empleadoService.obtnenerEmpleado(empleado.id).subscribe(
               empleadoFiltrado => empleado = empleadoFiltrado
-
             )
           })
           this.paginador = response;
-          console.log(response);
         })
 
       ).subscribe();
@@ -129,11 +125,7 @@ export class EmpleadosComponent implements OnInit {
     this.nombre = undefined;
     this.apellido1 = undefined;
     this.apellido2 = undefined;
-  }
-
-  abrirModal(empleado: Empleado) {
-    this.empleadoSeleccionado = empleado;
-    this.modalService.abrirModal();
+    this.email = undefined;
   }
 
 }

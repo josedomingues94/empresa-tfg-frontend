@@ -4,6 +4,7 @@ import { EmpleadoService } from './empleado.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import swal from 'sweetalert2';
 import { Oficina } from '../oficinas/oficina';
+import { OficinaService } from '../oficinas/oficina.service';
 
 @Component({
   selector: 'app-form',
@@ -12,13 +13,14 @@ import { Oficina } from '../oficinas/oficina';
 export class FormComponent implements OnInit {
 
   public empleado: Empleado = new Empleado();
-  titulo: string = "Crear Cliente";
-  oficina: Oficina[];
+  titulo: string = "Crear Empleado";
+  oficinas: Oficina[];
   errores: string[];
 
   constructor(public empleadoService: EmpleadoService,
     private router: Router,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute,
+  public oficinaService: OficinaService) { }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(params => {
@@ -27,6 +29,7 @@ export class FormComponent implements OnInit {
         this.empleadoService.getEmpleado(id).subscribe((empleado) => this.empleado = empleado);
       }
     });
+      this.empleadoService.getOficinas().subscribe((oficina) => this.oficinas = oficina);
   }
 
   create(): void {
@@ -61,6 +64,7 @@ export class FormComponent implements OnInit {
         }
       )
   }
+
 
   compararOficina(o1: Oficina, o2: Oficina): boolean {
     if (o1 === undefined && o2 === undefined) {

@@ -15,7 +15,7 @@ export class OficinaService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  getOficinas(nombre: string, ciudad: string, provincia: string, page: number): Observable<any> {
+  buscardorOficinas(nombre: string, ciudad: string, provincia: string, page: number): Observable<any> {
     let params = new HttpParams().set("nombre", nombre).set("ciudad", ciudad).set("provincia", provincia);
     return this.http.get(`${this.urlEndPoint}/page/${page}`, {params:params}).pipe(
       map((response: any) => {
@@ -57,7 +57,7 @@ export class OficinaService {
     );
   }
 
-  getOficina(id): Observable<Oficina> {
+  getOficina(id: number): Observable<Oficina> {
     return this.http.get<Oficina>(`${this.urlEndPoint}/${id}`).pipe(
       catchError(e => {
         if(e.status != 401 && e.error.mensaje){

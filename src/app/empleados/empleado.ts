@@ -9,6 +9,6 @@ export class Empleado {
   createAt: Date;
   email: string;
   foto: string;
-  oficina!: Oficina;
+  oficina: Oficina;
 
 }
