@@ -4,6 +4,7 @@ import { HttpClient, HttpRequest, HttpEvent, HttpHeaders, HttpParams} from '@ang
 import { map, catchError, tap} from 'rxjs/operators';
 import { Observable, throwError} from 'rxjs';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 
 @Injectable({
@@ -37,6 +38,7 @@ export class OficinaService {
           return throwError(e);
         }
         console.error(e.error.mensaje);
+        Swal.fire(e.error.mensaje, e.error.error, 'error');
         return throwError(e);
       })
     );
@@ -50,6 +52,7 @@ export class OficinaService {
           return throwError(e);
         }
         if(e.error.mensaje){
+          Swal.fire('Error al crear el vehículo', e.error.mensaje ,'error');
           console.log(e.error.mensaje);
         }
         return throwError(e);
@@ -76,6 +79,7 @@ export class OficinaService {
       }
       if(e.error.mensaje){
         console.error(e.error.mensaje);
+        Swal.fire(e.error.mensaje, e.error.error, 'error');
       }
       return throwError(e);
     }));

@@ -76,8 +76,8 @@
       <label for="oficina" class="col-form-label col-sm-2">Oficina</label>
       <div class="col-sm-6">
         <select [compareWith]="compararOficina" class="form-control" [(ngModel)]="empleado.oficina" name="oficina" style="width:500px;">
-          <option [ngValue]="undefined">--- selecionar una región ---</option>
-          <option *ngFor="let oficina of oficinas" [ngValue]="region">{{empleado.oficina?.nombre}}</option>
+          <option [ngValue]="undefined">--- selecionar una oficina ---</option>
+          <option *ngFor="let oficina of oficinas" [ngValue]="oficina">{{empleado.oficina?.nombre}}</option>
         </select>
       </div>
     </div>

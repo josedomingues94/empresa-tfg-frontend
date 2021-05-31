@@ -16,9 +16,11 @@ export class FormComponent implements OnInit {
   oficinas: Oficina[];
   errores: string[];
 
-  constructor(public empleadoService: EmpleadoService,
+  constructor(
+    public empleadoService: EmpleadoService,
     private router: Router,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute
+  ) { }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(params => {

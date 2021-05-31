@@ -47,7 +47,7 @@ export class OficinasComponent implements OnInit {
     })
     swalWithBootstrapButtons.fire({
       title: 'Está seguro?',
-      text: `¿Seguro que desea eliminar al cliente ${oficina.nombre}?`,
+      text: `¿Seguro que desea eliminar la oficina ${oficina.nombre}?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Dar de baja',
@@ -60,8 +60,8 @@ export class OficinasComponent implements OnInit {
           () => {
             this.oficinas = this.oficinas.filter(ofi => ofi !== oficina)
             swalWithBootstrapButtons.fire(
-              'Cliente Eliminado!',
-              `Cliente ${oficina.nombre} eliminado con éxito.`,
+              'Oficina Eliminada!',
+              `Oficina ${oficina.nombre} eliminado con éxito.`,
               'success'
             )
           }
