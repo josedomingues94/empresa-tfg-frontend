@@ -19,9 +19,11 @@ export class OficinasComponent implements OnInit {
   ciudad: string;
   provincia: string;
 
-  constructor(private oficinaService: OficinaService,
-  public authService: AuthService,
-  private activatedRoute: ActivatedRoute) { }
+  constructor(
+    private oficinaService: OficinaService,
+    public authService: AuthService,
+    private activatedRoute: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(params => {
