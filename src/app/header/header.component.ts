@@ -9,16 +9,13 @@ import swal from 'sweetalert2';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
+  title: string = 'App Angular'
 
-
-  titulo: string = "Empresa";
-
-  constructor(public authService: AuthService, private router: Router){}
-
+  constructor(public authService: AuthService, private router: Router) { }
   logout(): void {
     let username = this.authService.usuario.username;
     this.authService.logout();
-    swal.fire('Logout', `Hola ${username}, has cerrado session`, 'success');
+    swal.fire('Logout', `Hola ${username}, has cerrado sesión con éxito!`, 'success');
     this.router.navigate(['/login']);
   }
 }

@@ -17,7 +17,6 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { LoginComponent } from './usuarios/login.component';
 import { PerfilComponent } from './empleados/perfil/perfil.component';
 import { PaginadorComponent } from './paginador/paginador.component';
-import { UsuarioperfilComponent } from './usuarios/usuarioperfil.component';
 import { OficinasComponent } from './oficinas/oficinas.component';
 import { OficinaService } from './oficinas/oficina.service';
 import { FormComponentOficina } from './oficinas/form.component.oficina';
@@ -31,7 +30,6 @@ import { ChatComponent } from './chat/chat.component';
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'login', component: LoginComponent},
-  {path: 'usuarios/perfil', component: UsuarioperfilComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_USER'} },
   {path: 'empleados', component: EmpleadosComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_USER'} },
   {path: 'empleados/page/:page', component: EmpleadosComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_USER'} },
   {path: 'empleados/form', component: FormComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_ADMIN'} },
@@ -56,7 +54,6 @@ const routes: Routes = [
     LoginComponent,
     PaginadorComponent,
     PerfilComponent,
-    UsuarioperfilComponent,
     OficinasComponent,
     PaginadorOficinasComponent,
     ChatComponent
