@@ -33,15 +33,13 @@ export class OficinaService {
 
   obtnenerOficina(id: number): Observable<Oficina> {
     return this.http.get<Oficina>(`${this.urlEndPoint}/${id}`).pipe(
-      catchError(e => {
-        if (e.status == 400) {
+        catchError(e => {
+          console.error(e.error.mensaje);
+          this.router.navigate(['/empleados'])
+          Swal.fire('Error al editar', e.error.mensaje, 'error')
           return throwError(e);
-        }
-        console.error(e.error.mensaje);
-        Swal.fire(e.error.mensaje, e.error.error, 'error');
-        return throwError(e);
-      })
-    );
+        })
+      );
   }
 
   create(oficina: Oficina): Observable<Oficina> {

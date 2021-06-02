@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map, catchError, tap } from 'rxjs/operators';
 import { Usuario } from './usuario';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +12,12 @@ export class AuthService {
 
   private _usuario: Usuario;
   private _token: string;
+  private urlEndPoint: string = 'http://localhost:8080/api/usuarios';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) { }
 
   public get usuario(): Usuario {
     if (this._usuario != null) {

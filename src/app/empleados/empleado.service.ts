@@ -4,7 +4,9 @@ import { HttpClient, HttpRequest, HttpEvent, HttpParams } from '@angular/common/
 import { map, catchError, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { Oficina } from '../oficinas/oficina'
+import { OficinaService } from '../oficinas/oficina.service';
 import { Router } from '@angular/router';
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +15,18 @@ export class EmpleadoService {
 
   private urlEndPoint: string = 'http://localhost:8080/api/empleados';
 
-  constructor(private http: HttpClient, private router: Router) { }
+  oficina: number;
+
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private oficinaService: OficinaService
+  ) { }
 
   getOficinas(): Observable<Oficina[]> {
-    return this.http.get<Oficina[]>(`${this.urlEndPoint}/oficinas`);
-  }
+      return this.http.get<Oficina[]>(this.urlEndPoint + '/oficinas');
+    }
+
 
   getEmpleados(nombre: string, apellido1: string, apellido2: string, email: string, page: number): Observable<any> {
     let params = new HttpParams().set("nombre", nombre).set("apellido1", apellido1).set("apellido2", apellido2).set("email", email);
@@ -35,6 +44,7 @@ export class EmpleadoService {
   }
 
   create(empleado: Empleado): Observable<Empleado> {
+    this.oficinaService.getOficina(this.oficina);
     return this.http.post(this.urlEndPoint, empleado)
       .pipe(
         map((response: any) => response.empleado as Empleado),

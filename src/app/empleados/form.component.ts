@@ -30,7 +30,9 @@ export class FormComponent implements OnInit {
         }
       });
 
-      this.empleadoService.getOficinas().subscribe(oficina => this.oficinas = oficina);
+      this.empleadoService.getOficinas().subscribe(oficinas => this.oficinas = oficinas);
+
+
     }
 
     create(): void {

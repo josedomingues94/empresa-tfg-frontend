@@ -22,6 +22,7 @@ import { OficinaService } from './oficinas/oficina.service';
 import { FormComponentOficina } from './oficinas/form.component.oficina';
 import { PaginadorOficinasComponent } from './paginador-oficinas/paginador-oficinas.component';
 import { ChatComponent } from './chat/chat.component';
+import { UsuarioPerfilComponent } from './usuarios/usuario.perfil.component';
 
 
 
@@ -30,6 +31,7 @@ import { ChatComponent } from './chat/chat.component';
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'login', component: LoginComponent},
+  {path: 'perfil', component: UsuarioPerfilComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_USER'} },
   {path: 'empleados', component: EmpleadosComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_USER'} },
   {path: 'empleados/page/:page', component: EmpleadosComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_USER'} },
   {path: 'empleados/form', component: FormComponent, canActivate: [AuthGuard, RoleGuard], data: {role: 'ROLE_ADMIN'} },
@@ -56,7 +58,8 @@ const routes: Routes = [
     PerfilComponent,
     OficinasComponent,
     PaginadorOficinasComponent,
-    ChatComponent
+    ChatComponent,
+    UsuarioPerfilComponent
   ],
   imports: [
     BrowserModule,
