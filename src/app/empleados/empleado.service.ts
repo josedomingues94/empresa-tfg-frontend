@@ -73,19 +73,21 @@ export class EmpleadoService {
       })
     );
   }
-
+   
   update(empleado: Empleado): Observable<any> {
-    return this.http.put<any>(`${this.urlEndPoint}/${empleado.id}`, empleado).pipe(
-      catchError(e => {
-        if (e.status == 400) {
-          return throwError(e);
-        }
-        if (e.error.mensaje) {
+      return this.http.put<any>(`${this.urlEndPoint}/${empleado.id}`, empleado).pipe(
+        map((response: any) =>
+        response.empleado as Empleado),
+        catchError(e => {
+          if (e.status == 400) {
+            return throwError(e);
+          }
           console.error(e.error.mensaje);
-        }
-        return throwError(e);
-      }));
-  }
+          Swal.fire(e.error.mensaje, e.error.error, 'error')
+          return throwError(e);
+        })
+      );
+    }
 
   delete(id: number): Observable<Empleado> {
     return this.http.delete<Empleado>(`${this.urlEndPoint}/${id}`).pipe(
