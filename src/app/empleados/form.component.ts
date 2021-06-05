@@ -4,6 +4,7 @@ import { EmpleadoService } from './empleado.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import swal from 'sweetalert2';
 import { Oficina } from '../oficinas/oficina';
+import { OficinaService } from '../oficinas/oficina.service';
 
 @Component({
   selector: 'app-form',
@@ -13,11 +14,14 @@ export class FormComponent implements OnInit {
 
   public empleado: Empleado = new Empleado();
   titulo: string = "Crear Empleado";
-  oficinas: Oficina[];
+  oficinas: Oficina[] = [];
   errores: string[];
+  oficina: Oficina = new Oficina();
 
   constructor(
     public empleadoService: EmpleadoService,
+    public oficinaService: OficinaService,
+
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) { }
@@ -26,7 +30,7 @@ export class FormComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe(params => {
         let id = +params.get('id');
         if (id) {
-          this.empleadoService.getEmpleado(id).subscribe((empleado) => this.empleado = empleado);
+          this.cargarEmpleado();
         }
       });
 
@@ -40,6 +44,8 @@ export class FormComponent implements OnInit {
       this.empleadoService.create(this.empleado)
         .subscribe(
           empleado => {
+            console.log(this.empleado);
+            console.log(this.oficinas);
             this.router.navigate(['/empleados']);
             swal.fire('Nuevo cliente', `El cliente ${empleado.nombre} ha sido creado con éxito`, 'success');
           },
@@ -65,6 +71,23 @@ export class FormComponent implements OnInit {
             console.error(err.error.errors);
           }
         )
+    }
+
+    cargarEmpleado():void{
+      this.activatedRoute.params.subscribe(params=>{
+        let id=params['id'];
+        if(id){
+          this.empleadoService.getEmpleado(id).subscribe((empleado)=>{
+            this.empleado.dni = empleado.dni;
+            this.empleado.nombre = empleado.nombre;
+            this.empleado.apellido1 = empleado.apellido1;
+            this.empleado.apellido2 = empleado.apellido2;
+            this.empleado.createAt = empleado.createAt;
+            this.empleado.oficina = empleado.oficina;
+            console.log(this.empleado);
+          });
+        }
+      })
     }
 
     compararOficina(o1: Oficina, o2: Oficina): boolean {

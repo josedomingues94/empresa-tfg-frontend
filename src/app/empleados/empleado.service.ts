@@ -6,6 +6,7 @@ import { Observable, throwError } from 'rxjs';
 import { Oficina } from '../oficinas/oficina'
 import { OficinaService } from '../oficinas/oficina.service';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 
 @Injectable({
@@ -44,19 +45,20 @@ export class EmpleadoService {
   }
 
   create(empleado: Empleado): Observable<Empleado> {
-    this.oficinaService.getOficina(this.oficina);
-    return this.http.post(this.urlEndPoint, empleado)
-      .pipe(
-        map((response: any) => response.empleado as Empleado),
+    console.log("AAAAAAAAAAAAAAA")
+    console.log(empleado)
+    console.log(empleado.oficina);
+    return this.http.post(this.urlEndPoint, empleado).pipe(
+        map((response: any) =>
+          response.empleado as Empleado),
         catchError(e => {
           if (e.status == 400) {
             return throwError(e);
           }
-          if (e.error.mensaje) {
-            console.error(e.error.mensaje);
-          }
+          console.error(e.mensaje);
+          Swal.fire('Error al crear el vehículo', e.error.mensaje ,'error');
           return throwError(e);
-        }));
+        }))
   }
 
   getEmpleado(id): Observable<Empleado> {
@@ -65,6 +67,7 @@ export class EmpleadoService {
         if (e.status == 400) {
         this.router.navigate(['/empleados']);
         }
+        Swal.fire('Vehiculo no encontrado', e.error.mensaje, 'error');
         console.error(e.error.mensaje);
         return throwError(e);
       })
@@ -104,5 +107,18 @@ export class EmpleadoService {
     });
 
     return this.http.request(req);
+  }
+
+  obtnenerOficina(id: number): Observable<Oficina> {
+    return this.http.get<Oficina>(`${this.urlEndPoint}/${id}/oficina`).pipe(
+      catchError(e => {
+        if (e.status == 400) {
+          return throwError(e);
+        }
+        console.error(e.error.mensaje);
+        Swal.fire(e.error.mensaje, e.error.error, 'error')
+        return throwError(e);
+      })
+    );
   }
 }

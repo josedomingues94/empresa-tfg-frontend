@@ -25,7 +25,9 @@ export class PerfilComponent implements OnInit {
     private authService: AuthService,
     public modalService: ModalService) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.empleadoService.getOficinas();
+   }
 
   seleccionarFoto(event) {
     this.fotoSeleccionada = event.target.files[0];

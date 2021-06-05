@@ -21,6 +21,7 @@ export class EmpleadosComponent implements OnInit {
   apellido2: string;
   email: string;
   empleadoSeleccionado: Empleado;
+  id:number;
 
   constructor(private empleadoService: EmpleadoService,
     private modalService: ModalService,
@@ -34,12 +35,12 @@ export class EmpleadosComponent implements OnInit {
       if (!page) {
         page = 0;
       }
-
       this.empleadoService.getEmpleados(this.nombre, this.apellido1, this.apellido2, this.email, page)
         .subscribe(response => {
-          this.empleados = response.content as Empleado[];
+          this.empleados = response.content as Empleado[]
           this.paginador = response;
         });
+        this.empleadoService.obtnenerOficina(this.id);
     });
 
     this.modalService.notificarUpload.subscribe(empleado => {
@@ -131,3 +132,7 @@ export class EmpleadosComponent implements OnInit {
   }
 
 }
+function id(id: any) {
+  throw new Error('Function not implemented.');
+}
+
